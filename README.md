@@ -1,1 +1,1 @@
-# WhitelistMarketplace
+# Wallet Connect tests
