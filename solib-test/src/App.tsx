@@ -5,8 +5,6 @@ import {
   init, PhantomConnector, WalletConnectConnector, 
   InjectedConnector, mainnetBetaWalletConnect, connect
 } from '@walletconnect/solib'
-import { Buffer } from 'buffer';
-(global as any).Buffer = Buffer;
 
 
 
@@ -36,9 +34,9 @@ init(
   PROJECT_ID
 );
 
-//const connectWallet = async () => {
-  //await connect()
-//};
+const connectWallet = async () => {
+  await connect()
+};
 
 function App() {
   return (
@@ -48,7 +46,7 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
-        <button>Connect Wallet</button>
+        <button onClick={connectWallet} >Connect Wallet</button>
         <a
           className="App-link"
           href="https://reactjs.org"
