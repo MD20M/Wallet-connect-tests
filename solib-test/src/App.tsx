@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import { 
   init, PhantomConnector, WalletConnectConnector, 
-  InjectedConnector, mainnetBetaWalletConnect, connect
+  InjectedConnector, mainnetBetaWalletConnect, connect, switchConnector
 } from '@walletconnect/solib'
 
 
@@ -34,11 +34,17 @@ init(
   PROJECT_ID
 );
 
+
+
 const connectWallet = async () => {
   await connect()
 };
 
 function App() {
+
+
+
+
   return (
     <div className="App">
       <header className="App-header">
