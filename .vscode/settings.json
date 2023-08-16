@@ -1,3 +1,4 @@
 {
-    "npm.exclude": ""
+    "npm.exclude": "",
+    "liveServer.settings.port": 5501
 }

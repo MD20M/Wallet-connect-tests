@@ -1,0 +1,5 @@
+# Allow execution of JavaScript modules
+allow_scripts = yes
+
+# Set the MIME type for JavaScript files
+AddType text/javascript .js

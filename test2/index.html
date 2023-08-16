@@ -8,14 +8,17 @@
     <title>Document</title>
   </head>
   <body>
+    <script src="https://unpkg.com/@supabase/supabase-js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-phantom@latest/lib/index.js"></script>
     <!-- Development (un-minified) -->
 <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
 
 <!-- Production (minified) -->
 <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
-    <button id="connectButton">Connect</button>
+    <button id="connectButton">ConnectEVM</button>
+    <button id="solConnect">Sol connect</button>
     <button id="changeChainButton">Change Chain</button>
+    <button id="disButton">Discord</button>
     <w3m-core-button></w3m-core-button>
     <w3m-network-switch></w3m-network-switch>
     <script src="index.js" type="module"></script>

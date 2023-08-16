@@ -69,6 +69,32 @@ changeChainButton.addEventListener("click", async () => {
   await web3modal.setDefaultChain(polygon)
 });
 
+let solConnectBtn = document.getElementById("solConnect");
+
+solConnectBtn.addEventListener("click", async () => {
+  await window.solflare.connect();
+});
+
+
+
+const { createClient } = supabase
+const _supabase = createClient('https://tiydslbpuiyjczpcbgpc.supabase.co', 'public-anon-key')
+console.log('Supabase Instance: ', _supabase)
+
+async function signInWithDiscord() {
+  const { data, error } = await _supabase.auth.signInWithOAuth({
+    provider: 'discord',
+  })
+}
+
+let disButton = document.getElementById("disButton");
+
+disButton.addEventListener("click", async () => {
+  await signInWithDiscord()
+});
+
+//const supaValue = _supabase.auth.getUser();
+//console.log(supaValue.getUser.data);
 
 // 3. Create ethereum and modal clients
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
