@@ -8,14 +8,6 @@ import {
 } from "https://unpkg.com/@web3modal/ethereum@2.6.2";
 import { Web3Modal } from "https://unpkg.com/@web3modal/html@2.6.2";
 
-//import { Connection, PublicKey } from 'https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js';
-
-
-
-//solana wallet adapter for all solana wallets in javascript using https imports
-//import { WalletAdapterNetwork } from "https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-base";
-
-
 
 //console.log(solanaWeb3);
 const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("devnet"));
@@ -25,9 +17,6 @@ const keypairs = solanaWeb3.Keypair.generate();
 console.log(keypairs);
 
 
-
-//import { PhantomWallet } from "../node_modules/@solana/wallet-adapter-phantom";
-//console.log(solWeb3);
 // 0. Import wagmi dependencies
 const { mainnet, polygon, avalanche, arbitrum } = WagmiCoreChains;
 const { configureChains, createConfig } = WagmiCore;
@@ -57,6 +46,18 @@ const wagmiConfig = createConfig({
 const ethClient = new EthereumClient(wagmiConfig, chains)
 const web3modal = new Web3Modal({ projectId }, ethClient)
 
+// 3. Create ethereum and modal clients
+const ethereumClient = new EthereumClient(wagmiConfig, chains);
+export const web3Modal = new Web3Modal(
+  {
+    projectId,
+    walletImages: {
+      safe: "https://pbs.twimg.com/profile_images/1566773491764023297/IvmCdGnM_400x400.jpg",
+    },
+  },
+  ethereumClient
+);
+
 let connectButton = document.getElementById("connectButton");
 
 connectButton.addEventListener("click", async () => {
@@ -69,21 +70,28 @@ changeChainButton.addEventListener("click", async () => {
   await web3modal.setDefaultChain(polygon)
 });
 
+/////////////////////////////////////////////////////////////
 let solConnectBtn = document.getElementById("solConnect");
 
 solConnectBtn.addEventListener("click", async () => {
   await window.solflare.connect();
 });
+/////////////////////////////////////////////////////////////
 
 
-
+////////////////////////////////////////////////////////////////////////////////
 const { createClient } = supabase
-const _supabase = createClient('https://tiydslbpuiyjczpcbgpc.supabase.co', 'public-anon-key')
+const _supabase = createClient('https://tiydslbpuiyjczpcbgpc.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpeWRzbGJwdWl5amN6cGNiZ3BjIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTAzMDIxNjQsImV4cCI6MjAwNTg3ODE2NH0.PqFWBpujnGoanrFqy-Saz8Yyq4b5yycs_dvMIacmTf8')
 console.log('Supabase Instance: ', _supabase)
+
+
 
 async function signInWithDiscord() {
   const { data, error } = await _supabase.auth.signInWithOAuth({
     provider: 'discord',
+    options: {
+      scopes: 'identify guilds guilds.members.read connections email'
+    }
   })
 }
 
@@ -93,17 +101,34 @@ disButton.addEventListener("click", async () => {
   await signInWithDiscord()
 });
 
-//const supaValue = _supabase.auth.getUser();
-//console.log(supaValue.getUser.data);
+const isLoggedInFunc = async () => {
+  const { session } = await _supabase.auth.getSession();
+  return !session;
+};
 
-// 3. Create ethereum and modal clients
-const ethereumClient = new EthereumClient(wagmiConfig, chains);
-export const web3Modal = new Web3Modal(
-  {
-    projectId,
-    walletImages: {
-      safe: "https://pbs.twimg.com/profile_images/1566773491764023297/IvmCdGnM_400x400.jpg",
-    },
-  },
-  ethereumClient
-);
+const isLoggedIn = await isLoggedInFunc();
+console.log(isLoggedIn);
+if (isLoggedIn) {
+  console.log("User is logged in");
+  const { data: { user } } = await _supabase.auth.getUser();
+  console.log(await _supabase.auth.getUser())
+  console.log(user.user_metadata);
+  //console.log(user.user_metadata.full_name);
+  disButton.textContent = user.user_metadata.full_name;
+  console.log("<img src="+ user.user_metadata.avatar_url +'/>')
+  disButton.innerHTML = "<img src='"+ user.user_metadata.avatar_url +"'/>" + user.user_metadata.full_name
+} else {
+  console.log("User is not logged in");
+}
+
+let disButtonOut = document.getElementById("disButtonOut");
+async function signout() {
+  const { error } = await _supabase.auth.signOut()
+}
+disButtonOut.addEventListener("click", async () => {
+  await signout()
+  disButton.textContent = "Discord Login";
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
